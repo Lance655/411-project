@@ -26,3 +26,16 @@ print()
 print("sup bro")
 print(weather_data['timelines']['daily'][2])
 
+# Specify the target date in the format 'YYYY-MM-DD'
+target_date = "2023-11-04"
+
+# Iterate through the daily timelines to find the one that matches the target date
+target_timeline = None
+for daily_timeline in weather_data['timelines']['daily']:
+    if daily_timeline['time'] == target_date:
+        target_timeline = daily_timeline
+        break
+
+
+
+
