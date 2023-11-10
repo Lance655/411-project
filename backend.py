@@ -38,4 +38,21 @@ for daily_timeline in weather_data['timelines']['daily']:
 
 
 
+print()
+print()
+print()
+print("sup bro")
+
+url = "https://real-time-events-search.p.rapidapi.com/search-events"
+
+querystring = {"query":"Concerts in San-Francisco","start":"0"}
+
+headers = {
+	"X-RapidAPI-Key": "6319ba4d96mshf4bc1f385f347ddp133906jsnfea5e88cf1ab",
+	"X-RapidAPI-Host": "real-time-events-search.p.rapidapi.com"
+}
+
+response = requests.get(url, headers=headers, params=querystring)
+
+print(response.json())
 
