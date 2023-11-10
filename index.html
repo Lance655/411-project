@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rain or Shine</title>
+    <!-- Include any stylesheets or external libraries if needed -->
+    <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+    <header>
+        <h1>Rain or Shine</h1>
+    </header>
+
+    <main>
+
+        <main>
+            <!-- Landing Page Description Section -->
+            <section id="landingDescription">
+                <p>
+                    Ever planned to attend an awesome event, only to face a gloomy weather surprise? Fear not! We've got your back. 
+                    Picture this: You pick an event, we check the weather. If it's sunshine and rainbows, we give you the green light!
+                    But oh no, if the weather is being a party pooper, we'll suggest equally fantastic events happening nearby.
+                </p>
+                <p>Ready for sunnier plans and stress-free events? Let's make every outing a Rain or Shine-approved adventure!</p>
+            </section>
+
+        <section id="loginSection">
+            <!-- Add a button to initiate OAuth login -->
+            <button onclick="loginWithOAuth()">Login</button>
+        </section>
+
+        <section id="inputSection">
+            <label for="eventID">Enter Event ID:</label>
+            <input type="text" id="eventID" placeholder="Event ID">
+            <button onclick="getRecommendation()">Get Recommendation</button>
+        </section>
+
+        <section id="resultSection">
+            <!-- Weather recommendation and alternative events will be displayed here -->
+        </section>
+
+        <section id="userInfo" style="display: none;">
+            <!-- Placeholder for user information after login -->
+            <p id="userName"></p>
+            <p id="userEmail"></p>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Rain or Shine</p>
+    </footer>
+
+    <!-- Include any scripts or external JavaScript files -->
+    <script src="app.js"></script>
+</body>
+</html>
