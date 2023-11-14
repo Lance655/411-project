@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rain - Indoor Event Recommendations</title>
+    <link href="styles.css" rel="stylesheet"> 
+    <style>
+        body, input, button {
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            padding: 20px;
+        }
+
+        body {
+            color: whitesmoke;
+            background-image: url(https://images.unsplash.com/photo-1498847559558-1e4b1a7f7a2f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+            background-size: cover;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>
+            <p style = "font-size: 80px; padding-right: 50px; margin-top: 5px">
+                RAIN  
+            </p>  
+            </h1>
+    </header>
+
+    <main id="event-listings">
+
+    </main>
+
+    <script src="script.js"></script>
+
+    <script>
+        // change this part to fetch events from the backend
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the preferred distance from localStorage
+            const preferredDistance = localStorage.getItem('preferredDistance');
+          
+            // Fetch events from the backend
+            fetch('backend-api-url') // Replace with your actual backend API URL
+              .then(response => response.json())
+              .then(events => {
+                const listings = document.getElementById('event-listings');
+          
+                // Iterate over each event and create HTML elements
+                events.forEach(event => {
+                  const article = document.createElement('article');
+                  article.className = 'event';
+          
+                  // Determine the badge color based on the distance
+                  const badgeColor = event.distance <= preferredDistance ? 'green' : 'yellow'; // Example logic
+          
+                  // Populate the article with event data
+                  article.innerHTML = `
+                    <h2>${event.name} <span class="badge" style="background-color: ${badgeColor};">${event.distance} miles</span></h2>
+                    <p>Date: ${event.date}</p>
+                    <p>Location: ${event.location}</p>
+                    <p>Description: ${event.description}</p>
+                  `;
+          
+                  // Append the article to the listings
+                  listings.appendChild(article);
+                });
+              })
+              .catch(error => {
+                console.error('Error fetching events:', error);
+              });
+          });
+          
+    </script>
+</body>
+</html>
