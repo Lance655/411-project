@@ -3,57 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rain or Shine</title>
-    <!-- Include any stylesheets or external libraries if needed -->
+    <title>Rain or Shine - Event Weather Planner</title>
     <link rel="stylesheet" href="styles.css"/>
+    <style>
+        body, input, button {
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            padding: 20px;
+        }
+        input[type="text"], input[type="number"] {
+            font-size: 20px;
+            width: 20%; 
+            padding: 10px; 
+            margin-bottom: 5px; 
+        }
+        body {
+            color: whitesmoke;
+            background-image: url(https://images.unsplash.com/photo-1614259191821-764847fde18b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+            background-size: cover;
+        }
+
+        .container {
+            position: relative;
+            text-align: left;
+        }
+
+        .container p {
+            position: relative;
+            z-index: 2;
+        }
+
+        .container img {
+            position: absolute;
+            top: -50px;
+            bottom: 0;
+            right: -60px;
+            width: 35%;
+            height: 100vh;
+            z-index: 1;
+            opacity: 0.4;
+        }
+        
+    </style>
+    <script>
+      // Function to handle form submission
+      function handleSubmit(event) {
+        event.preventDefault();
+        const eventName = document.getElementById('event-name').value;
+        const zipcode = document.getElementById('zipcode').value;
+        const eventId = document.getElementById('event-id').value;
+        const distance = document.getElementById('distance').value;
+        console.log('Form data:', { eventName, zipcode, eventId, distance });
+
+      }
+
+      // Function to initiate OAuth process
+      function initiateOAuthLogin() {
+        // replace 'https://your-oauth-provider.com/auth' with the actual url 
+        window.location.href = 'https://your-oauth-provider.com/auth';
+      }
+    </script>
 </head>
 <body>
-    <header>
-        <h1>Rain or Shine</h1>
-    </header>
+    <div class = "container">
+    <h1>
+        <p style = "font-size: 80px; padding-right: 50px; margin-top: 5px">
+            Rain or Shine     
+        </h1>
+        </p>
 
-    <main>
-
-        <main>
-            <!-- Landing Page Description Section
-            <section id="landingDescription">
-                <p>
-                    Ever planned to attend an awesome event, only to face a gloomy weather surprise? Fear not! We've got your back. 
-                    Picture this: You pick an event, we check the weather. If it's sunshine and rainbows, we give you the green light!
-                    But oh no, if the weather is being a party pooper, we'll suggest equally fantastic events happening nearby.
-                </p>
-                <p>Ready for sunnier plans and stress-free events? Let's make every outing a Rain or Shine-approved adventure!</p>
-            </section>
-            -->
-
-        <section id="loginSection">
-            <!-- Add a button to initiate OAuth login -->
-            <button onclick="loginWithOAuth()">Login</button>
-        </section>
-
-        <section id="inputSection">
-            <label for="eventID">Enter Event ID:</label>
-            <input type="text" id="eventID" placeholder="Event ID">
-            <button onclick="getRecommendation()">Get Recommendation</button>
-        </section>
-
-        <section id="resultSection">
-            <!-- Weather recommendation and alternative events will be displayed here -->
-        </section>
-
-        <section id="userInfo" style="display: none;">
-            <!-- Placeholder for user information after login -->
-            <p id="userName"></p>
-            <p id="userEmail"></p>
-        </section>
-
-    </main>
-
-    <footer>
-        <p>&copy; 2023 Rain or Shine</p>
-    </footer>
-
-    <!-- Include any scripts or external JavaScript files -->
-    <script src="app.js"></script>
+    <form onsubmit="handleSubmit(event)">
+        <p style = "font-size: 30px; color: rgb(252, 255, 206); text-align: right">
+        <label for="event-name">Event Name:</label>
+        <br>
+        <input type="text" id="event-name" name="event-name" placeholder="Enter the name of the event">
+        <br>
+        <label for="zipcode">Zipcode:</label>
+        <br>
+        <input type="text" id="zipcode" name="zipcode" placeholder="Enter your zipcode">
+        <br>
+        <label for="event-id">Event ID:</label>
+        <br>
+        <input type="text" id="event-id" name="event-id" placeholder="Enter Event ID">
+        <br>
+        <label for="distance">Distance Willing to Travel (mile):</label>
+        <br>
+        <input type="number" id="distance" name="distance" placeholder="Enter distance in mile">
+        <br>
+        <button type="submit">
+        <p style = "font-size: 20px; margin: 0px">
+            Find Events</button>
+        </p>
+    </form>
+    <button onclick="initiateOAuthLogin()">
+    <p style = "font-size: 20px; margin: 0px">
+        Login with OAuth</button>
+    </p>
+    <img src = "https://images.unsplash.com/photo-1601662528567-526cd06f6582?q=80&w=1615&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
+</div>
+</p>
 </body>
 </html>
