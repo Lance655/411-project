@@ -54,6 +54,10 @@
         const distance = document.getElementById('distance').value;
         console.log('Form data:', { eventName, zipcode, eventId, distance });
 
+        localStorage.setItem('name', eventName);
+        localStorage.setItem('zipcode', zipcode);
+        localStorage.setItem('id', eventId);
+        localStorage.setItem('preferredDistance', distance);
       }
 
       // Function to initiate OAuth process
@@ -67,9 +71,10 @@
     <div class = "container">
     <h1>
         <p style = "font-size: 80px; padding-right: 50px; margin-top: 5px">
-            Rain or Shine     
+            Rain or Shine   
+        </p>  
         </h1>
-        </p>
+        
 
     <form onsubmit="handleSubmit(event)">
         <p style = "font-size: 30px; color: rgb(252, 255, 206); text-align: right">
