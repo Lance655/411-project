@@ -1,8 +1,11 @@
 import os
 import requests
 from dotenv import load_dotenv
+from datetime import datetime
 
 load_dotenv()
+
+# ------------------------------------ WEATHER API ----------------------------------------- #
 
 TOMORROWIO_API_KEY = os.getenv("Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea")  # Remember .env file!
 
@@ -20,28 +23,38 @@ def get_weather(location, api_key):
 # Replace 'latitude,longitude' with the actual coordinates of your location
 location = "latitude,longitude"
 weather_data = get_weather(location, TOMORROWIO_API_KEY)
-print(weather_data)
-print()
-print()
-print("sup bro")
-print(weather_data['timelines']['daily'][2])
+# print(weather_data)
 
-# Specify the target date in the format 'YYYY-MM-DD'
-target_date = "2023-11-04"
+def get_weather_for_date(api_key, city, target_date):
+   
+    url = "https://api.tomorrow.io/v4/weather/forecast?location={city}&apikey=Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea&timesteps=daily"
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        weather_data = response.json()
+        daily_timelines = weather_data.get('timelines', {}).get('daily', [])
 
-# Iterate through the daily timelines to find the one that matches the target date
-target_timeline = None
-for daily_timeline in weather_data['timelines']['daily']:
-    if daily_timeline['time'] == target_date:
-        target_timeline = daily_timeline
-        break
+        for daily_data in daily_timelines:
+            # Parse the date from the "time" string
+            date_from_api = datetime.strptime(daily_data.get('time'), "%Y-%m-%dT%H:%M:%SZ").date()
+            
+            # Parse the target date
+            target_date_parsed = datetime.strptime(target_date, "%Y-%m-%d").date()
+
+            # Compare only the date part
+            if date_from_api == target_date_parsed:
+                return daily_data.get('values', {})
+
+    return None
+
+weather_vals = get_weather_for_date(TOMORROWIO_API_KEY, "new york", "2023-11-17")
+print(weather_vals)
 
 
 
-print()
-print()
-print()
-print("sup bro")
+# ------------------------------------ EVENTS API ----------------------------------------- #
+
+
 
 url = "https://real-time-events-search.p.rapidapi.com/search-events"
 
@@ -52,7 +65,8 @@ headers = {
 	"X-RapidAPI-Host": "real-time-events-search.p.rapidapi.com"
 }
 
-response = requests.get(url, headers=headers, params=querystring)
-
-print(response.json())
+# Commented out the API call below. Only use sparingly --> don't go over limit
+# response = requests.get(url, headers=headers, params=querystring)
+#
+# print(response.json())
 
