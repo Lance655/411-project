@@ -9,6 +9,7 @@ load_dotenv()
 
 TOMORROWIO_API_KEY = os.getenv("Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea")  # Remember .env file!
 
+# get_weather - takes as input a location and api key and returns the weather values for the next 5 days
 def get_weather(location, api_key):
     url = "https://api.tomorrow.io/v4/weather/forecast?location=new%20york&apikey=Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea&timesteps=daily"
     params = {
@@ -25,6 +26,8 @@ location = "latitude,longitude"
 weather_data = get_weather(location, TOMORROWIO_API_KEY)
 # print(weather_data)
 
+
+# get_weather_for_date - takes as input the city and target date and returns the weather values for that day
 def get_weather_for_date(api_key, city, target_date):
    
     url = "https://api.tomorrow.io/v4/weather/forecast?location={city}&apikey=Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea&timesteps=daily"
