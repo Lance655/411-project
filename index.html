@@ -62,19 +62,20 @@
         <br>
         <input type="date" id="event-date" name="event-date" required>
         <br>
-        <label for="zipcode">Zipcode:</label>
+        <label for="city">City:</label>
         <br>
-        <input type="text" id="zipcode" name="zipcode" required placeholder="Enter your zipcode">
-        <br>
-        <label for="distance">Distance Willing to Travel (mile):</label>
-        <br>
-        <input type="number" id="distance" name="distance" required placeholder="Enter distance in mile">
+        <input type="text" id="city" name="city" required placeholder="Enter the city">
         <br>
         <button type="submit">
         <p style = "font-size: 20px; margin: 0px">
             Find Events</button>
         </p>
     </form>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
     <button onclick="initiateOAuthLogin()">
     <p style = "font-size: 20px; margin: 0px">
         Login with OAuth</button>
@@ -89,14 +90,12 @@
     function handleSubmit(event) {
         event.preventDefault();
         const eventDate = document.getElementById('event-date').value;
-        const zipcode = document.getElementById('zipcode').value;
-        const distance = document.getElementById('distance').value;
+        const zipcode = document.getElementById('city').value;
 
-        console.log('Form data:', { eventDate, zipcode, distance });
+        console.log('Form data:', { eventDate, city });
 
         localStorage.setItem('eventDate', eventDate);
-        localStorage.setItem('zipcode', zipcode);
-        localStorage.setItem('preferredDistance', distance);
+        localStorage.setItem('city', city);
 
         window.location.href = 'events.html';
     }
