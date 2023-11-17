@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rain or Shine - Event Listing</title>
+    <link rel="stylesheet" href="styles.css"/>
+    <style>
+        body {
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            color: whitesmoke;
+            background-image: url(https://images.unsplash.com/photo-1419833173245-f59e1b93f9ee?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+            background-size: cover;
+            padding: 15px;
+        }
+
+        .flex-container {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            margin-block: 20px; /* Space between day containers */
+            align-items: center;
+        }
+        
+        .day-container {
+            display: flex;
+            flex-direction: column;
+            width: calc(20% - 50px);
+            background: #fff;
+            opacity: 0.5;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            margin-top: -30px;
+        }
+        
+        .date-title {
+            font-size: 1.5rem; /* Set the font-size for 'Day' */
+            font-weight: bold;
+            color: rgb(36, 36, 72);
+            margin: 0; /* Remove default margin */
+        }
+        
+        .date-size {
+            font-size: 1rem; /* Smaller font-size for 'date' */
+            font-weight: normal;
+        }
+        
+        .event-schedule {
+            display: flex;
+            flex-direction: row; /* Align containers horizontally */
+            flex-wrap: wrap; /* Allow containers to wrap to the next line if needed */
+            gap: 20px; /* This sets the space between each day's flex container */
+            justify-content: center; /* Center the items horizontally */
+            padding: 20px; /* Padding around the whole schedule */
+        }
+        
+        .event-item {
+            display: flex;
+            align-items: left;
+            justify-content: space-between;
+            padding: 0.5em 1em;
+            margin: 0.3em 0;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-item:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background-color: inherit;
+        }
+
+        .recommend:before {background-color: green; }
+        .maybe:before {background-color: orange; }
+        .not-recommend:before {background-color: red; }
+
+        .event-name {
+            margin-left: 10px;
+        }        
+
+    </style>
+</head>
+<body>
+    <h1>
+        <p style = "font-size: 80px; padding-right: 50px; margin-top: 5px">
+            Event Lists   
+        </p>  
+    </h1>
+
+    <main id="event-schedule" class="event-schedule">
+        
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const eventSchedule = document.getElementById('event-schedule');
+            eventSchedule.innerHTML = ''; // Clear any existing content
+    
+            // Retrieve the date from localStorage and generate the day containers
+            const selectedDate = localStorage.getItem('eventDate');
+    
+            if (selectedDate) {
+                for (let i = 1; i < 6; i++) {
+                    const date = new Date(selectedDate);
+                    date.setDate(date.getDate() + i);
+                    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                    const formattedDate = date.toLocaleDateString(undefined, options);
+                    const dayOfWeek = formattedDate.split(',')[0];
+                    const datePortion = formattedDate.split(', ')[1];
+    
+                    const dayContainer = document.createElement('div');
+                    dayContainer.className = 'day-container flex-container';
+    
+                    const dateTitle = document.createElement('h2');
+                    dateTitle.className = 'date-title';
+                    dateTitle.innerHTML = `<span class="day-name">${dayOfWeek}</span> <span class="date-size">(${datePortion})</span>`;
+    
+                    dayContainer.appendChild(dateTitle);
+    
+                    eventSchedule.appendChild(dayContainer);
+                }
+            } else {
+                console.log('No event date found in localStorage.');
+            }
+        });
+
+    </script>    
+</body>
+</html>
