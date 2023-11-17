@@ -48,15 +48,13 @@
       // Function to handle form submission
       function handleSubmit(event) {
         event.preventDefault();
-        const eventName = document.getElementById('event-name').value;
+        const Date = document.getElementById('event-date').value;
         const zipcode = document.getElementById('zipcode').value;
-        const eventId = document.getElementById('event-id').value;
         const distance = document.getElementById('distance').value;
-        console.log('Form data:', { eventName, zipcode, eventId, distance });
+        console.log('Form data:', { Date, zipcode, distance });
 
-        localStorage.setItem('name', eventName);
+        localStorage.setItem('date', Date);
         localStorage.setItem('zipcode', zipcode);
-        localStorage.setItem('id', eventId);
         localStorage.setItem('preferredDistance', distance);
       }
 
@@ -80,15 +78,11 @@
         <p style = "font-size: 30px; color: rgb(252, 255, 206); text-align: right">
         <label for="event-name">Event Name:</label>
         <br>
-        <input type="text" id="event-name" name="event-name" placeholder="Enter the name of the event">
+        <input type="text" id="event-date" name="event-date" placeholder="Enter the date">
         <br>
         <label for="zipcode">Zipcode:</label>
         <br>
         <input type="text" id="zipcode" name="zipcode" placeholder="Enter your zipcode">
-        <br>
-        <label for="event-id">Event ID:</label>
-        <br>
-        <input type="text" id="event-id" name="event-id" placeholder="Enter Event ID">
         <br>
         <label for="distance">Distance Willing to Travel (mile):</label>
         <br>
