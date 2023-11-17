@@ -8,7 +8,7 @@
     <style>
         body, input, button {
             font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-            padding: 20px;
+            padding: 15px;
         }
         input[type="text"], input[type="number"] {
             font-size: 20px;
@@ -48,12 +48,12 @@
       // Function to handle form submission
       function handleSubmit(event) {
         event.preventDefault();
-        const Date = document.getElementById('event-date').value;
+        const eventDate = document.getElementById('event-date').value;
         const zipcode = document.getElementById('zipcode').value;
         const distance = document.getElementById('distance').value;
-        console.log('Form data:', { Date, zipcode, distance });
+        console.log('Form data:', { eventDate, zipcode, distance });
 
-        localStorage.setItem('date', Date);
+        localStorage.setItem('eventDate', eventDate);
         localStorage.setItem('zipcode', zipcode);
         localStorage.setItem('preferredDistance', distance);
       }
@@ -79,17 +79,17 @@
         <br>
         <br>
         <br>
-        <label for="event-name">Event Name:</label>
+        <label for="event-date">Event Date:</label>
         <br>
-        <input type="text" id="event-date" name="event-date" placeholder="Enter the date">
+        <input type="date" id="event-date" name="event-date" required>
         <br>
         <label for="zipcode">Zipcode:</label>
         <br>
-        <input type="text" id="zipcode" name="zipcode" placeholder="Enter your zipcode">
+        <input type="text" id="zipcode" name="zipcode" required placeholder="Enter your zipcode">
         <br>
         <label for="distance">Distance Willing to Travel (mile):</label>
         <br>
-        <input type="number" id="distance" name="distance" placeholder="Enter distance in mile">
+        <input type="number" id="distance" name="distance" required placeholder="Enter distance in mile">
         <br>
         <button type="submit">
         <p style = "font-size: 20px; margin: 0px">
