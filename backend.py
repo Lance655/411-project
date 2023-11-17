@@ -7,7 +7,7 @@ load_dotenv()
 
 # ------------------------------------ WEATHER API ----------------------------------------- #
 
-TOMORROWIO_API_KEY = os.getenv("Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea")  # Remember .env file!
+TOMORROWIO_API_KEY = os.getenv("Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea")  
 
 # get_weather - takes as input a location and api key and returns the weather values for the next 5 days
 def get_weather(location, api_key):
@@ -19,11 +19,12 @@ def get_weather(location, api_key):
         "apikey": api_key,
     }
     response = requests.get(url, params=params)
+
     return response.json()
 
 # Replace 'latitude,longitude' with the actual coordinates of your location
 location = "latitude,longitude"
-weather_data = get_weather(location, TOMORROWIO_API_KEY)
+# weather_data = get_weather(location, TOMORROWIO_API_KEY)
 # print(weather_data)
 
 
@@ -50,8 +51,45 @@ def get_weather_for_date(api_key, city, target_date):
 
     return None
 
-weather_vals = get_weather_for_date(TOMORROWIO_API_KEY, "new york", "2023-11-17")
-print(weather_vals)
+
+# weather_vals = get_weather_for_date(TOMORROWIO_API_KEY, "new york", "2023-11-19")
+# print(weather_vals)
+
+weather_vals = {'cloudBaseAvg': 1.25, 'cloudBaseMax': 5.08, 'cloudBaseMin': 0, 'cloudCeilingAvg': 2.32, 'cloudCeilingMax': 8.05, 'cloudCeilingMin': 0, 'cloudCoverAvg': 65.12, 'cloudCoverMax': 100, 'cloudCoverMin': 1, 'dewPointAvg': 5.06, 'dewPointMax': 8.86, 'dewPointMin': 2.88, 'evapotranspirationAvg': 0.03, 'evapotranspirationMax': 0.104, 'evapotranspirationMin': 0, 'evapotranspirationSum': 0.689, 'freezingRainIntensityAvg': 0, 'freezingRainIntensityMax': 0, 'freezingRainIntensityMin': 0, 'humidityAvg': 91.71, 'humidityMax': 95, 'humidityMin': 80.29, 'iceAccumulationAvg': 0, 'iceAccumulationLweAvg': 0, 'iceAccumulationLweMax': 0, 'iceAccumulationLweMin': 0, 'iceAccumulationLweSum': 0, 'iceAccumulationMax': 0, 'iceAccumulationMin': 0, 'iceAccumulationSum': 0, 'moonriseTime': '2023-11-17T12:08:14Z', 'moonsetTime': '2023-11-17T19:06:07Z', 'precipitationProbabilityAvg': 16.3, 'precipitationProbabilityMax': 70, 'precipitationProbabilityMin': 0, 'pressureSurfaceLevelAvg': 1018.16, 'pressureSurfaceLevelMax': 1020.04, 'pressureSurfaceLevelMin': 1013.8, 'rainAccumulationAvg': 0.16, 'rainAccumulationLweAvg': 0.16, 'rainAccumulationLweMax': 0.86, 'rainAccumulationLweMin': 0, 'rainAccumulationMax': 0.86, 'rainAccumulationMin': 0, 'rainAccumulationSum': 3.67, 'rainIntensityAvg': 0.14, 'rainIntensityMax': 0.86, 'rainIntensityMin': 0, 'sleetAccumulationAvg': 0, 'sleetAccumulationLweAvg': 0, 'sleetAccumulationLweMax': 0, 'sleetAccumulationLweMin': 0, 'sleetAccumulationLweSum': 0, 'sleetAccumulationMax': 0, 'sleetAccumulationMin': 0, 'sleetIntensityAvg': 0, 'sleetIntensityMax': 0, 'sleetIntensityMin': 0, 'snowAccumulationAvg': 0, 'snowAccumulationLweAvg': 0, 'snowAccumulationLweMax': 0, 'snowAccumulationLweMin': 0, 'snowAccumulationLweSum': 0, 'snowAccumulationMax': 0, 'snowAccumulationMin': 0, 'snowAccumulationSum': 0, 'snowIntensityAvg': 0, 'snowIntensityMax': 0, 'snowIntensityMin': 0, 'sunriseTime': '2023-11-17T07:10:00Z', 'sunsetTime': '2023-11-17T16:20:00Z', 'temperatureApparentAvg': 5.36, 'temperatureApparentMax': 10.34, 'temperatureApparentMin': 0.84, 'temperatureAvg': 6.33, 'temperatureMax': 10.34, 'temperatureMin': 3.63, 'uvHealthConcernAvg': 0, 'uvHealthConcernMax': 0, 'uvHealthConcernMin': 0, 'uvIndexAvg': 0, 'uvIndexMax': 0, 'uvIndexMin': 0, 'visibilityAvg': 12.45, 'visibilityMax': 16, 'visibilityMin': 4.16, 'weatherCodeMax': 1001, 'weatherCodeMin': 1001, 'windDirectionAvg': 212.01, 'windGustAvg': 4.98, 'windGustMax': 10.22, 'windGustMin': 2.79, 'windSpeedAvg': 2.96, 'windSpeedMax': 6.07, 'windSpeedMin': 1.79}
+
+# calculate_weather_score - takes as input the 
+def calculate_weather_score(weather_data):
+    # Define weights for each criterion (adjust as needed)
+    weights = {
+        'temperature_max': -0.5,
+        'precipitation_probability_avg': -0.3,
+        'wind_speed_max': -0.2,
+        'cloud_cover_avg': -0.1,
+        # Add more criteria and adjust weights as needed
+    }
+
+    # Extract relevant weather data
+    temperature_max = weather_data['temperatureMax']
+    precipitation_probability_avg = weather_data['precipitationProbabilityAvg']
+    wind_speed_max = weather_data['windSpeedMax']
+    cloud_cover_avg = weather_data['cloudCoverAvg']
+
+    # Calculate the weather score
+    weather_score = (
+        weights['temperature_max'] * temperature_max +
+        weights['precipitation_probability_avg'] * precipitation_probability_avg +
+        weights['wind_speed_max'] * wind_speed_max +
+        weights['cloud_cover_avg'] * cloud_cover_avg
+        # Add more terms for other criteria
+    )
+
+    return weather_score
+
+
+score = calculate_weather_score(weather_vals)
+print(f"Weather Score: {score}")
+
+
 
 
 
