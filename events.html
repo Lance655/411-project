@@ -14,17 +14,10 @@
             padding: 15px;
         }
 
-        .flex-container {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            margin-block: 20px; /* Space between day containers */
-            align-items: center;
-        }
-        
         .day-container {
             display: flex;
             flex-direction: column;
+            align-items: left;
             width: calc(20% - 50px);
             background: #fff;
             opacity: 0.5;
@@ -32,6 +25,7 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             margin-top: -30px;
+            text-align: left;
         }
         
         .date-title {
@@ -39,6 +33,7 @@
             font-weight: bold;
             color: rgb(36, 36, 72);
             margin: 0; /* Remove default margin */
+            text-align: center;
         }
         
         .date-size {
@@ -56,34 +51,30 @@
         }
         
         .event-item {
-            display: flex;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            background: #f9f9f9;
             align-items: left;
-            justify-content: space-between;
-            padding: 0.5em 1em;
-            margin: 0.3em 0;
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
         }
-
-        .event-item:before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 5px;
-            background-color: inherit;
+        
+        .recommend {
+            border-left: 18px solid green;
         }
-
-        .recommend:before {background-color: green; }
-        .maybe:before {background-color: orange; }
-        .not-recommend:before {background-color: red; }
-
-        .event-name {
-            margin-left: 10px;
-        }        
-
+        
+        .maybe {
+            border-left: 18px solid orange;
+        }
+        
+        .not-recommend {
+            border-left: 18px solid red;
+        }
+        
+        .no-events-message {
+            text-align: center;
+            padding: 10px;
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -98,39 +89,81 @@
     </main>
 
     <script src="script.js"></script>
-    <script>
+    <script>   
+        function fetchEventsForDate(date) {
+            // Change this function to link frontend and backend (this is for the simulation)
+            return new Promise((resolve) => {
+            // Simulate a backend response with a mix of recommended, maybe, and not recommended events
+            setTimeout(() => {
+                resolve([
+                { id: 1, name: 'Event A', recommendationLevel: 'high' },
+                { id: 2, name: 'Event B', recommendationLevel: 'medium' },
+                { id: 3, name: 'Event C', recommendationLevel: 'low' }
+                // ... more events ...
+                ]);
+            }, 1000);
+            });
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             const eventSchedule = document.getElementById('event-schedule');
             eventSchedule.innerHTML = ''; // Clear any existing content
-    
-            // Retrieve the date from localStorage and generate the day containers
+        
             const selectedDate = localStorage.getItem('eventDate');
-    
+
             if (selectedDate) {
-                for (let i = 1; i < 6; i++) {
+                for (let i = 0; i < 5; i++) {
                     const date = new Date(selectedDate);
                     date.setDate(date.getDate() + i);
                     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                     const formattedDate = date.toLocaleDateString(undefined, options);
                     const dayOfWeek = formattedDate.split(',')[0];
                     const datePortion = formattedDate.split(', ')[1];
-    
+        
                     const dayContainer = document.createElement('div');
-                    dayContainer.className = 'day-container flex-container';
-    
+                    dayContainer.className = 'day-container';
+        
                     const dateTitle = document.createElement('h2');
                     dateTitle.className = 'date-title';
-                    dateTitle.innerHTML = `<span class="day-name">${dayOfWeek}</span> <span class="date-size">(${datePortion})</span>`;
-    
+                    dateTitle.innerHTML = `${dayOfWeek} <span class="date-size">(${datePortion})</span>`;
+        
                     dayContainer.appendChild(dateTitle);
-    
+        
+                    // Fetch events for the date
+                    fetchEventsForDate(date).then(events => {
+                        // If no events, display "No Events" message
+                        if (!events || events.length === 0) {
+                            const noEventsMessage = document.createElement('div');
+                            noEventsMessage.textContent = 'No Events :(';
+                            noEventsMessage.className = 'no-events-message';
+                            dayContainer.appendChild(noEventsMessage);
+                        } else {
+                            // Create and append an element for each event
+                            events.forEach(event => {
+                                const eventElement = document.createElement('div');
+                                eventElement.className = 'event-item';
+                                eventElement.textContent = event.name;
+        
+                                // Apply color coding based on recommendation level
+                                if (event.recommendationLevel === 'high') {
+                                    eventElement.classList.add('recommend');
+                                } else if (event.recommendationLevel === 'medium') {
+                                    eventElement.classList.add('maybe');
+                                } else {
+                                    eventElement.classList.add('not-recommend');
+                                }
+        
+                                dayContainer.appendChild(eventElement);
+                            });
+                        }
+                    });
+        
                     eventSchedule.appendChild(dayContainer);
                 }
             } else {
                 console.log('No event date found in localStorage.');
             }
         });
-
     </script>    
 </body>
 </html>
