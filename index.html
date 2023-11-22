@@ -10,8 +10,8 @@
             font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
             padding: 15px;
         }
-        input[type="text"], input[type="number"] {
-            font-size: 20px;
+        input[type="text"], input[type="date"] {
+            font-size: 25px;
             width: 20%; 
             padding: 10px; 
             margin-bottom: 5px; 
@@ -34,8 +34,7 @@
 
         .container img {
             position: absolute;
-            top: -50px;
-            bottom: 0;
+            top: -45px;
             right: -60px;
             width: 35%;
             height: 100vh;
@@ -52,11 +51,9 @@
             Rain or Shine   
         </p>  
         </h1>
-        
+        <br>
     <form onsubmit="handleSubmit(event)">
-        <p style = "font-size: 30px; color: rgb(252, 255, 206); text-align: right">
-        <br>
-        <br>
+        <p style = "font-size: 40px; color: rgb(252, 255, 206); text-align: right">
         <br>
         <label for="event-date">Event Date:</label>
         <br>
@@ -71,9 +68,6 @@
             Find Events</button>
         </p>
     </form>
-    <br>
-    <br>
-    <br>
     <br>
     <br>
     <button onclick="initiateOAuthLogin()">
