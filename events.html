@@ -14,6 +14,10 @@
             padding: 15px;
         }
 
+        #city-name {
+            text-shadow: 7px 7px 3px rgba(0, 0, 0, 0.5);
+        }
+
         .day-container {
             display: flex;
             flex-direction: column;
@@ -51,14 +55,18 @@
         }
         
         .event-item {
-            color: black;
+            font-family: monospace;
             font-weight: normal;
-            font-size: 1.5rem;
+            font-size: 0.8rem;
             padding: 10px;
             margin: 5px 0;
             border-radius: 4px;
             background: #f9f9f9;
             align-items: left;
+        }
+
+        .event-item a {
+            color: black;
         }
         
         .recommend {
@@ -83,7 +91,7 @@
 <body>
     <h1>
         <p style = "font-size: 80px; padding-right: 50px; margin-top: 5px">
-            Event Lists   
+            Event Lists in <span id="city-name"></span>  
         </p>  
     </h1>
 
@@ -106,13 +114,27 @@
                 ]);
             }, 1000);
             });
+        } 
+
+        function toTitleCase(str) {
+            // Capitalize the city name
+            return str.replace(/\b(\w)/g, s => s.toUpperCase());
         }
         
         document.addEventListener('DOMContentLoaded', function() {
             const eventSchedule = document.getElementById('event-schedule');
+            const cityNameElement = document.getElementById('city-name');
             eventSchedule.innerHTML = ''; // Clear any existing content
         
             const selectedDate = localStorage.getItem('eventDate');
+            const cityName = localStorage.getItem('city');
+
+            if (cityName) {
+                cityNameElement.textContent = toTitleCase(cityName);
+                cityNameElement.style.fontSize = '1.3em';
+            } else {
+                cityNameElement.textContent = 'Unknown City'; // Default text or handle as needed
+            }
 
             if (selectedDate) {
                 for (let i = 1; i < 6; i++) {
@@ -145,8 +167,15 @@
                             events.forEach(event => {
                                 const eventElement = document.createElement('div');
                                 eventElement.className = 'event-item';
-                                eventElement.textContent = event.name;
-        
+
+                                // Create an anchor element for the event name
+                                const eventLink = document.createElement('a');
+                                eventLink.href = event.url; // Set the URL provided by the backend
+                                eventLink.textContent = event.name;
+                                eventLink.target = '_blank'; // Open in a new tab
+
+                                eventElement.appendChild(eventLink);
+
                                 // Apply color coding based on recommendation level
                                 if (event.recommendationLevel === 'high') {
                                     eventElement.classList.add('recommend');
