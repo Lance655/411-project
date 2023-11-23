@@ -56,12 +56,14 @@ def get_weather_for_date(api_key, city, target_date):
 # This method takes as input the weather_data for a day and calculates the corresponding score
 def calculate_weather_score(api_key, city, target_date):
     weather_data = get_weather_for_date(api_key, city, target_date)
+    print("weather data is", weather_data)
     # Define weights for each criterion (adjust as needed)
     weights = {
         'temperature_max': -0.5,
         'precipitation_probability_avg': -0.3,
         'wind_speed_max': -0.2,
         'cloud_cover_avg': -0.1,
+        'snowAccumulationAvg': -0.3
         # Add more criteria and adjust weights as needed
     }
 
@@ -70,40 +72,46 @@ def calculate_weather_score(api_key, city, target_date):
     precipitation_probability_avg = weather_data['precipitationProbabilityAvg']
     wind_speed_max = weather_data['windSpeedMax']
     cloud_cover_avg = weather_data['cloudCoverAvg']
+    snow_accumulation_avg = weather_data['snowAccumulationAvg']
+
 
     # Calculate the weather score
     weather_score = (
         weights['temperature_max'] * temperature_max +
         weights['precipitation_probability_avg'] * precipitation_probability_avg +
         weights['wind_speed_max'] * wind_speed_max +
-        weights['cloud_cover_avg'] * cloud_cover_avg
+        weights['cloud_cover_avg'] * cloud_cover_avg +
+        weights['snowAccumulationAvg'] * snow_accumulation_avg
         # Add more terms for other criteria
     )
 
+    print("weather score is ", weather_score)
     weather_result = interpret_weather_score(weather_score)
+    print("weather result is", weather_result)
 
     return weather_result
 
 
 # This method categorizes the weather scores - (helper method for calculate_weather_score)
 def interpret_weather_score(weather_score):
-    if weather_score < -1.0:
+    if weather_score < -20.0:
         return "Avoid"
-    elif -1.0 <= weather_score < 0.0:
+    elif -20.0 <= weather_score < -15.0:
         return "Not Ideal"
-    elif 0.0 <= weather_score < 1.0:
+    elif -15.0 <= weather_score < -5.0:
         return "Fair"
-    elif 1.0 <= weather_score < 2.0:
+    elif -5.0 <= weather_score < -3.0:
         return "Good"
     else:
         return "Excellent"
 
 
 
+
 ## ---- TESTING -----
 
 
-result = calculate_weather_score(TOMORROWIO_API_KEY,"new york", "2023-11-23")
+result = calculate_weather_score(TOMORROWIO_API_KEY, "new york", "2023-11-26")
 print(result)
 # weather_vals = get_weather_for_date(TOMORROWIO_API_KEY, "new york", "2023-11-19")
 # print(weather_vals)
