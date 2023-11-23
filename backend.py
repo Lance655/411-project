@@ -5,11 +5,17 @@ from datetime import datetime
 
 load_dotenv()
 
+
+
 # ------------------------------------ WEATHER API ----------------------------------------- #
+
+
 
 TOMORROWIO_API_KEY = os.getenv("Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea")  
 
-# This method takes as input a location and api key and returns the weather values for the next 5 days
+
+
+# This method takes as input a location and api key and returns the weather values for the next 5 days - (testing method)
 def get_weather(location, api_key):
     url = "https://api.tomorrow.io/v4/weather/forecast?location=new%20york&apikey=Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea&timesteps=daily"
     params = {
@@ -22,13 +28,8 @@ def get_weather(location, api_key):
 
     return response.json()
 
-# Replace 'latitude,longitude' with the actual coordinates of your location
-location = "latitude,longitude"
-# weather_data = get_weather(location, TOMORROWIO_API_KEY)
-# print(weather_data)
 
-
-# This method takes as input the city and target date and returns the weather values for that day
+# This method takes as input the city and target date and returns the weather values for that day - (helper method for calculate_weather_score)
 def get_weather_for_date(api_key, city, target_date):
    
     url = "https://api.tomorrow.io/v4/weather/forecast?location={city}&apikey=Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea&timesteps=daily"
@@ -52,13 +53,9 @@ def get_weather_for_date(api_key, city, target_date):
     return None
 
 
-# weather_vals = get_weather_for_date(TOMORROWIO_API_KEY, "new york", "2023-11-19")
-# print(weather_vals)
-
-weather_vals = {'cloudBaseAvg': 1.25, 'cloudBaseMax': 5.08, 'cloudBaseMin': 0, 'cloudCeilingAvg': 2.32, 'cloudCeilingMax': 8.05, 'cloudCeilingMin': 0, 'cloudCoverAvg': 65.12, 'cloudCoverMax': 100, 'cloudCoverMin': 1, 'dewPointAvg': 5.06, 'dewPointMax': 8.86, 'dewPointMin': 2.88, 'evapotranspirationAvg': 0.03, 'evapotranspirationMax': 0.104, 'evapotranspirationMin': 0, 'evapotranspirationSum': 0.689, 'freezingRainIntensityAvg': 0, 'freezingRainIntensityMax': 0, 'freezingRainIntensityMin': 0, 'humidityAvg': 91.71, 'humidityMax': 95, 'humidityMin': 80.29, 'iceAccumulationAvg': 0, 'iceAccumulationLweAvg': 0, 'iceAccumulationLweMax': 0, 'iceAccumulationLweMin': 0, 'iceAccumulationLweSum': 0, 'iceAccumulationMax': 0, 'iceAccumulationMin': 0, 'iceAccumulationSum': 0, 'moonriseTime': '2023-11-17T12:08:14Z', 'moonsetTime': '2023-11-17T19:06:07Z', 'precipitationProbabilityAvg': 16.3, 'precipitationProbabilityMax': 70, 'precipitationProbabilityMin': 0, 'pressureSurfaceLevelAvg': 1018.16, 'pressureSurfaceLevelMax': 1020.04, 'pressureSurfaceLevelMin': 1013.8, 'rainAccumulationAvg': 0.16, 'rainAccumulationLweAvg': 0.16, 'rainAccumulationLweMax': 0.86, 'rainAccumulationLweMin': 0, 'rainAccumulationMax': 0.86, 'rainAccumulationMin': 0, 'rainAccumulationSum': 3.67, 'rainIntensityAvg': 0.14, 'rainIntensityMax': 0.86, 'rainIntensityMin': 0, 'sleetAccumulationAvg': 0, 'sleetAccumulationLweAvg': 0, 'sleetAccumulationLweMax': 0, 'sleetAccumulationLweMin': 0, 'sleetAccumulationLweSum': 0, 'sleetAccumulationMax': 0, 'sleetAccumulationMin': 0, 'sleetIntensityAvg': 0, 'sleetIntensityMax': 0, 'sleetIntensityMin': 0, 'snowAccumulationAvg': 0, 'snowAccumulationLweAvg': 0, 'snowAccumulationLweMax': 0, 'snowAccumulationLweMin': 0, 'snowAccumulationLweSum': 0, 'snowAccumulationMax': 0, 'snowAccumulationMin': 0, 'snowAccumulationSum': 0, 'snowIntensityAvg': 0, 'snowIntensityMax': 0, 'snowIntensityMin': 0, 'sunriseTime': '2023-11-17T07:10:00Z', 'sunsetTime': '2023-11-17T16:20:00Z', 'temperatureApparentAvg': 5.36, 'temperatureApparentMax': 10.34, 'temperatureApparentMin': 0.84, 'temperatureAvg': 6.33, 'temperatureMax': 10.34, 'temperatureMin': 3.63, 'uvHealthConcernAvg': 0, 'uvHealthConcernMax': 0, 'uvHealthConcernMin': 0, 'uvIndexAvg': 0, 'uvIndexMax': 0, 'uvIndexMin': 0, 'visibilityAvg': 12.45, 'visibilityMax': 16, 'visibilityMin': 4.16, 'weatherCodeMax': 1001, 'weatherCodeMin': 1001, 'windDirectionAvg': 212.01, 'windGustAvg': 4.98, 'windGustMax': 10.22, 'windGustMin': 2.79, 'windSpeedAvg': 2.96, 'windSpeedMax': 6.07, 'windSpeedMin': 1.79}
-
 # This method takes as input the weather_data for a day and calculates the corresponding score
-def calculate_weather_score(weather_data):
+def calculate_weather_score(api_key, city, target_date):
+    weather_data = get_weather_for_date(api_key, city, target_date)
     # Define weights for each criterion (adjust as needed)
     weights = {
         'temperature_max': -0.5,
@@ -83,13 +80,12 @@ def calculate_weather_score(weather_data):
         # Add more terms for other criteria
     )
 
-    return weather_score
+    weather_result = interpret_weather_score(weather_score)
+
+    return weather_result
 
 
-score = calculate_weather_score(weather_vals)
-print(f"Weather Score: {score}")
-
-# This method categorizes the weather scores
+# This method categorizes the weather scores - (helper method for calculate_weather_score)
 def interpret_weather_score(weather_score):
     if weather_score < -1.0:
         return "Avoid"
@@ -102,6 +98,22 @@ def interpret_weather_score(weather_score):
     else:
         return "Excellent"
 
+
+
+## ---- TESTING -----
+
+"""
+# weather_vals = get_weather_for_date(TOMORROWIO_API_KEY, "new york", "2023-11-19")
+# print(weather_vals)
+
+weather_vals = {'cloudBaseAvg': 1.25, 'cloudBaseMax': 5.08, 'cloudBaseMin': 0, 'cloudCeilingAvg': 2.32, 'cloudCeilingMax': 8.05, 'cloudCeilingMin': 0, 'cloudCoverAvg': 65.12, 'cloudCoverMax': 100, 'cloudCoverMin': 1, 'dewPointAvg': 5.06, 'dewPointMax': 8.86, 'dewPointMin': 2.88, 'evapotranspirationAvg': 0.03, 'evapotranspirationMax': 0.104, 'evapotranspirationMin': 0, 'evapotranspirationSum': 0.689, 'freezingRainIntensityAvg': 0, 'freezingRainIntensityMax': 0, 'freezingRainIntensityMin': 0, 'humidityAvg': 91.71, 'humidityMax': 95, 'humidityMin': 80.29, 'iceAccumulationAvg': 0, 'iceAccumulationLweAvg': 0, 'iceAccumulationLweMax': 0, 'iceAccumulationLweMin': 0, 'iceAccumulationLweSum': 0, 'iceAccumulationMax': 0, 'iceAccumulationMin': 0, 'iceAccumulationSum': 0, 'moonriseTime': '2023-11-17T12:08:14Z', 'moonsetTime': '2023-11-17T19:06:07Z', 'precipitationProbabilityAvg': 16.3, 'precipitationProbabilityMax': 70, 'precipitationProbabilityMin': 0, 'pressureSurfaceLevelAvg': 1018.16, 'pressureSurfaceLevelMax': 1020.04, 'pressureSurfaceLevelMin': 1013.8, 'rainAccumulationAvg': 0.16, 'rainAccumulationLweAvg': 0.16, 'rainAccumulationLweMax': 0.86, 'rainAccumulationLweMin': 0, 'rainAccumulationMax': 0.86, 'rainAccumulationMin': 0, 'rainAccumulationSum': 3.67, 'rainIntensityAvg': 0.14, 'rainIntensityMax': 0.86, 'rainIntensityMin': 0, 'sleetAccumulationAvg': 0, 'sleetAccumulationLweAvg': 0, 'sleetAccumulationLweMax': 0, 'sleetAccumulationLweMin': 0, 'sleetAccumulationLweSum': 0, 'sleetAccumulationMax': 0, 'sleetAccumulationMin': 0, 'sleetIntensityAvg': 0, 'sleetIntensityMax': 0, 'sleetIntensityMin': 0, 'snowAccumulationAvg': 0, 'snowAccumulationLweAvg': 0, 'snowAccumulationLweMax': 0, 'snowAccumulationLweMin': 0, 'snowAccumulationLweSum': 0, 'snowAccumulationMax': 0, 'snowAccumulationMin': 0, 'snowAccumulationSum': 0, 'snowIntensityAvg': 0, 'snowIntensityMax': 0, 'snowIntensityMin': 0, 'sunriseTime': '2023-11-17T07:10:00Z', 'sunsetTime': '2023-11-17T16:20:00Z', 'temperatureApparentAvg': 5.36, 'temperatureApparentMax': 10.34, 'temperatureApparentMin': 0.84, 'temperatureAvg': 6.33, 'temperatureMax': 10.34, 'temperatureMin': 3.63, 'uvHealthConcernAvg': 0, 'uvHealthConcernMax': 0, 'uvHealthConcernMin': 0, 'uvIndexAvg': 0, 'uvIndexMax': 0, 'uvIndexMin': 0, 'visibilityAvg': 12.45, 'visibilityMax': 16, 'visibilityMin': 4.16, 'weatherCodeMax': 1001, 'weatherCodeMin': 1001, 'windDirectionAvg': 212.01, 'windGustAvg': 4.98, 'windGustMax': 10.22, 'windGustMin': 2.79, 'windSpeedAvg': 2.96, 'windSpeedMax': 6.07, 'windSpeedMin': 1.79}
+
+# Replace 'latitude,longitude' with the actual coordinates of your location
+location = "latitude,longitude"
+# weather_data = get_weather(location, TOMORROWIO_API_KEY)
+# print(weather_data)
+
+"""
 
 
 
