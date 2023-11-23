@@ -102,7 +102,9 @@ def interpret_weather_score(weather_score):
 
 ## ---- TESTING -----
 
-"""
+
+result = calculate_weather_score(TOMORROWIO_API_KEY,"new york", "2023-11-23")
+print(result)
 # weather_vals = get_weather_for_date(TOMORROWIO_API_KEY, "new york", "2023-11-19")
 # print(weather_vals)
 
@@ -113,7 +115,7 @@ location = "latitude,longitude"
 # weather_data = get_weather(location, TOMORROWIO_API_KEY)
 # print(weather_data)
 
-"""
+
 
 
 
