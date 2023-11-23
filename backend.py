@@ -95,19 +95,75 @@ print(f"Weather Score: {score}")
 
 # ------------------------------------ EVENTS API ----------------------------------------- #
 
-
-
 url = "https://real-time-events-search.p.rapidapi.com/search-events"
-
-querystring = {"query":"Concerts in San-Francisco","start":"0"}
 
 headers = {
 	"X-RapidAPI-Key": "6319ba4d96mshf4bc1f385f347ddp133906jsnfea5e88cf1ab",
 	"X-RapidAPI-Host": "real-time-events-search.p.rapidapi.com"
 }
 
-# Commented out the API call below. Only use sparingly --> don't go over limit
-# response = requests.get(url, headers=headers, params=querystring)
-#
-# print(response.json())
+#This method calls the API with given location and returns the response call
+def get_event(location):
+    query = f"Event in {location}"  # Use the location variable to construct the query
+    querystring = {"query": query, "start": "0"}  # Construct the querystring with the dynamic query
+    return requests.get(url, headers=headers, params=querystring)
+
+#This will return a formatting string listing the events returned by AP
+def format_event_response(api_response):
+  formatted_response = ""
+  events = api_response.get('data', [])
+  
+  for i, event in enumerate(events, start=1):
+      name = event.get('name', 'No name provided')
+      location = event.get('venue', {}).get('full_address', 'No location provided')
+      start_time = event.get('start_time', 'No start time provided')
+      formatted_response += f"Event {i}\nName: {name}\nLocation: {location}\nTime: {start_time}\n\n"
+  
+  return formatted_response
+
+#This returns a list of all the Event Names in order
+def get_event_names(api_response):
+    events = api_response.get('data', [])
+    return [event.get('name', 'No name provided') for event in events]
+
+#This returns a list of all the Event dates in order
+def get_event_dates(api_response):
+    events = api_response.get('data', [])
+    return [event.get('start_time', 'No start time provided').split(' ')[0] for event in events] 
+
+#This returns a list of all the Event locations in order
+def get_event_locations(api_response):
+    events = api_response.get('data', [])
+    return [event.get('venue', {}).get('full_address', 'No location provided') for event in events]
+
+
+## ---- TESTING -----
+"""
+# Ask user for location
+user_location = input("Enter a location to search for events: ")
+
+# Call API to get events for the given location
+api_response = get_event(user_location).json()
+
+# Print formatted event details
+print("Formatted Event Details:")
+formatted_events = format_event_response(api_response)
+print(formatted_events)
+
+# Print list of event names
+print("Event Names:")
+event_names = get_event_names(api_response)
+print(event_names)
+
+# Print list of event dates
+print("Event Dates:")
+event_dates = get_event_dates(api_response)
+print(event_dates)
+
+# Print list of event locations
+print("Event Locations:")
+event_locations = get_event_locations(api_response)
+print(event_locations)
+
+"""
 
