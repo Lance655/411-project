@@ -100,6 +100,7 @@
     </main>
 
     <script src="script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script>   
         function fetchEventsForDate(date) {
             // Change this function to link frontend and backend (this is for the simulation)
@@ -176,6 +177,14 @@
 
                                 eventElement.appendChild(eventLink);
 
+                                // categorizes the weather scores
+                                const weatherCategorizes = document.createElement('span');
+                                weatherCategorizes.innerHTML = "Avoid";
+                                get_weather_categorizes(cityName,date.toLocaleDateString('sv-SE'), event.name,weatherCategorizes)
+                                weatherCategorizes.style.color = "red";
+                                weatherCategorizes.style.marginLeft = '10px';
+                                eventElement.appendChild(weatherCategorizes);
+
                                 // Apply color coding based on recommendation level
                                 if (event.recommendationLevel === 'high') {
                                     eventElement.classList.add('recommend');
@@ -196,6 +205,21 @@
                 console.log('No event date found in localStorage.');
             }
         });
+        // return weather categorizes
+        function get_weather_categorizes(city, date, eventName,element) {
+            console.log(city);
+            console.log(date);
+            console.log(eventName);
+            $.ajax("/get_weather_categorizes", {
+                type: "GET",
+                data: { city: city, date: date, eventName:eventName },
+            }).done(function(received_data) {
+               element.innerHTML = received_data;
+            }).fail(function() {
+                console.log("NG");
+            });
+        };
+
     </script>    
 </body>
 </html>
