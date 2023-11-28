@@ -11,7 +11,7 @@ load_dotenv()
 
 
 
-TOMORROWIO_API_KEY = os.getenv("Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea")  
+TOMORROWIO_API_KEY = os.getenv("Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea")
 
 
 
@@ -31,10 +31,10 @@ def get_weather(location, api_key):
 
 # This method takes as input the city and target date and returns the weather values for that day - (helper method for calculate_weather_score)
 def get_weather_for_date(api_key, city, target_date):
-   
-    url = "https://api.tomorrow.io/v4/weather/forecast?location={city}&apikey=Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea&timesteps=daily"
+
+    url = f"https://api.tomorrow.io/v4/weather/forecast?location={city}&apikey=Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea&timesteps=daily"
     response = requests.get(url)
-    
+
     if response.status_code == 200:
         weather_data = response.json()
         daily_timelines = weather_data.get('timelines', {}).get('daily', [])
@@ -42,7 +42,7 @@ def get_weather_for_date(api_key, city, target_date):
         for daily_data in daily_timelines:
             # Parse the date from the "time" string
             date_from_api = datetime.strptime(daily_data.get('time'), "%Y-%m-%dT%H:%M:%SZ").date()
-            
+
             # Parse the target date
             target_date_parsed = datetime.strptime(target_date, "%Y-%m-%d").date()
 
@@ -111,8 +111,8 @@ def interpret_weather_score(weather_score):
 ## ---- TESTING -----
 
 
-result = calculate_weather_score(TOMORROWIO_API_KEY, "new york", "2023-11-26")
-print(result)
+#result = calculate_weather_score(TOMORROWIO_API_KEY, "new york", datetime.now().strftime("%Y-%m-%d"))
+#print(result)
 # weather_vals = get_weather_for_date(TOMORROWIO_API_KEY, "new york", "2023-11-19")
 # print(weather_vals)
 
@@ -146,13 +146,13 @@ def get_event(location):
 def format_event_response(api_response):
   formatted_response = ""
   events = api_response.get('data', [])
-  
+
   for i, event in enumerate(events, start=1):
       name = event.get('name', 'No name provided')
       location = event.get('venue', {}).get('full_address', 'No location provided')
       start_time = event.get('start_time', 'No start time provided')
       formatted_response += f"Event {i}\nName: {name}\nLocation: {location}\nTime: {start_time}\n\n"
-  
+
   return formatted_response
 
 #This returns a list of all the Event Names in order
@@ -163,7 +163,7 @@ def get_event_names(api_response):
 #This returns a list of all the Event dates in order
 def get_event_dates(api_response):
     events = api_response.get('data', [])
-    return [event.get('start_time', 'No start time provided').split(' ')[0] for event in events] 
+    return [event.get('start_time', 'No start time provided').split(' ')[0] for event in events]
 
 #This returns a list of all the Event locations in order
 def get_event_locations(api_response):
