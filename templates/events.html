@@ -99,126 +99,107 @@
         
     </main>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="script.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script>   
-        function fetchEventsForDate(date) {
-            // Change this function to link frontend and backend (this is for the simulation)
-            return new Promise((resolve) => {
-            // Simulate a backend response with a mix of recommended, maybe, and not recommended events
-            setTimeout(() => {
-                resolve([
-                { id: 1, name: 'Event A', recommendationLevel: 'high' },
-                { id: 2, name: 'Event B', recommendationLevel: 'medium' },
-                { id: 3, name: 'Event C', recommendationLevel: 'low' }
-                // ... more events ...
-                ]);
-            }, 1000);
-            });
-        } 
-
         function toTitleCase(str) {
-            // Capitalize the city name
             return str.toLowerCase().replace(/\b\w/g, letter => letter.toUpperCase());
         }
-        
+
+        function fetchEventsForDate(cityName, date, dayContainer) {
+            $.ajax({
+                url: 'http://localhost:8080/findEvents',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ city: cityName, date: date.toISOString() }),
+                success: function(response) {
+                    // Assuming 'response' contains an array under 'events'
+                    const events = response.events; // Adjust depending on the actual structure of your response
+                    if (events.length > 0) {
+                        events.forEach(event => {
+                            const eventElement = document.createElement('div');
+                            eventElement.className = 'event-item';
+      
+                            // Assuming 'event' contains 'url' and 'name' fields
+                            const eventLink = document.createElement('a');
+                            eventLink.href = event.url;
+                            eventLink.textContent = event.name;
+                            eventLink.target = '_blank';
+                            eventElement.appendChild(eventLink);
+      
+                            // Apply color coding based on recommendation level
+                            const recommendationClass = mapRecommendationLevel(event.recommendationLevel);
+                            eventElement.classList.add(recommendationClass);
+      
+                            dayContainer.appendChild(eventElement);
+                        });
+                    } else {
+                        const noEventsMessage = document.createElement('div');
+                        noEventsMessage.textContent = 'No Events :(';
+                        noEventsMessage.className = 'no-events-message';
+                        dayContainer.appendChild(noEventsMessage);
+                    }
+                },
+                error: function(error) {
+                    console.error('Error fetching events:', error);
+                }
+            });
+        }
+
+        function mapRecommendationLevel(level) {
+            switch (level) {
+                case 'Avoid' :
+                    return 'not-recommend';
+                case 'Not Ideal':
+                case 'Fair':
+                    return 'maybe';
+                case 'Good':
+                case 'Excellent':
+                    return 'recommend';
+                default:
+                    return 'unknown';   // this is for unexpected cases
+            }
+        }
+      
         document.addEventListener('DOMContentLoaded', function() {
             const eventSchedule = document.getElementById('event-schedule');
             const cityNameElement = document.getElementById('city-name');
-            eventSchedule.innerHTML = ''; // Clear any existing content
-        
             const selectedDate = localStorage.getItem('eventDate');
             const cityName = localStorage.getItem('city');
-
+      
             if (cityName) {
                 cityNameElement.textContent = toTitleCase(cityName);
-                cityNameElement.style.fontSize = '1.3em';
             } else {
                 cityNameElement.textContent = 'Unknown City'; // Default text or handle as needed
             }
-
+      
             if (selectedDate) {
-                for (let i = 1; i < 6; i++) {
+                for (let i = 0; i < 5; i++) {
                     const date = new Date(selectedDate);
                     date.setDate(date.getDate() + i);
                     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                     const formattedDate = date.toLocaleDateString(undefined, options);
                     const dayOfWeek = formattedDate.split(',')[0];
                     const datePortion = formattedDate.split(', ')[1];
-        
+      
                     const dayContainer = document.createElement('div');
                     dayContainer.className = 'day-container';
-        
+      
                     const dateTitle = document.createElement('h2');
                     dateTitle.className = 'date-title';
                     dateTitle.innerHTML = `${dayOfWeek} <span class="date-size">(${datePortion})</span>`;
-        
+      
                     dayContainer.appendChild(dateTitle);
-        
+      
                     // Fetch events for the date
-                    fetchEventsForDate(date).then(events => {
-                        // If no events, display "No Events" message
-                        if (!events || events.length === 0) {
-                            const noEventsMessage = document.createElement('div');
-                            noEventsMessage.textContent = 'No Events :(';
-                            noEventsMessage.className = 'no-events-message';
-                            dayContainer.appendChild(noEventsMessage);
-                        } else {
-                            // Create and append an element for each event
-                            events.forEach(event => {
-                                const eventElement = document.createElement('div');
-                                eventElement.className = 'event-item';
-
-                                // Create an anchor element for the event name
-                                const eventLink = document.createElement('a');
-                                eventLink.href = event.url; // Set the URL provided by the backend
-                                eventLink.textContent = event.name;
-                                eventLink.target = '_blank'; // Open in a new tab
-
-                                eventElement.appendChild(eventLink);
-
-                                // categorizes the weather scores
-                                const weatherCategorizes = document.createElement('span');
-                                weatherCategorizes.innerHTML = "Avoid";
-                                get_weather_categorizes(cityName,date.toLocaleDateString('sv-SE'), event.name,weatherCategorizes)
-                                weatherCategorizes.style.color = "red";
-                                weatherCategorizes.style.marginLeft = '10px';
-                                eventElement.appendChild(weatherCategorizes);
-
-                                // Apply color coding based on recommendation level
-                                if (event.recommendationLevel === 'high') {
-                                    eventElement.classList.add('recommend');
-                                } else if (event.recommendationLevel === 'medium') {
-                                    eventElement.classList.add('maybe');
-                                } else {
-                                    eventElement.classList.add('not-recommend');
-                                }
-        
-                                dayContainer.appendChild(eventElement);
-                            });
-                        }
-                    });
-        
+                    fetchEventsForDate(cityName, date, dayContainer);
+      
                     eventSchedule.appendChild(dayContainer);
                 }
             } else {
                 console.log('No event date found in localStorage.');
             }
         });
-        // return weather categorizes
-        function get_weather_categorizes(city, date, eventName,element) {
-            console.log(city);
-            console.log(date);
-            console.log(eventName);
-            $.ajax("/get_weather_categorizes", {
-                type: "GET",
-                data: { city: city, date: date, eventName:eventName },
-            }).done(function(received_data) {
-               element.innerHTML = received_data;
-            }).fail(function() {
-                console.log("NG");
-            });
-        };
 
     </script>    
 </body>
