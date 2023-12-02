@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rain or Shine - Event Weather Planner</title>
-    <link rel="stylesheet" href="styles.css"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         body, input, button {
             font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
@@ -52,7 +52,7 @@
         </p>  
         </h1>
         <br>
-    <form onsubmit="handleSubmit(event)">
+    <form id = "event-form" onsubmit="handleSubmit(event)">
         <p style = "font-size: 40px; color: rgb(252, 255, 206); text-align: right">
         <br>
         <label for="event-date">Event Date:</label>
@@ -78,7 +78,8 @@
 </div>
 </p>
 
-<script src="script.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 <script>
     // Function to handle form submission
     function handleSubmit(event) {
@@ -91,7 +92,19 @@
         localStorage.setItem('eventDate', eventDate);
         localStorage.setItem('city', city);
 
-        window.location.href = 'events.html';
+        $.ajax({
+            url: 'http://localhost:8080/findEvents',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ date: eventDate, city: city}),
+            success: function(response) {
+                console.log('Success:', success);
+                window.location.href = 'events.html';
+            },
+            error: function(error) {
+                console.log('Error:', error);
+            }
+        });
     }
     // Function to initiate OAuth process
     function initiateOAuthLogin() {
