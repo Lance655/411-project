@@ -15,8 +15,9 @@ def index():
 def find_events():
     target_date = request.form.get('event-date')
     city = request.form.get('city')
+    print(city)
     weather_info = get_weather_for_date("TODO api_key",  city, target_date)
-    weather_score = calculate_weather_score(weather_info)
+    weather_score = calculate_weather_score("Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea", city, target_date)
     return render_template('events.html',weather_score=weather_score)
 
 
@@ -28,7 +29,7 @@ def get_weather_categorizes():
 
     weather_score = calculate_weather_score("TODO api_key", city, target_date)
     weather_categorizes = interpret_weather_score(weather_score)
-    return weather_categorizes
+    return weather_score
 
 if __name__ == "__main__":
     app.run(port=8080, debug=True)
