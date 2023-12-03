@@ -86,10 +86,10 @@ def calculate_weather_score(api_key, city, target_date):
     )
 
     print("weather score is ", weather_score)
-    weather_result = interpret_weather_score(weather_score)
-    print("weather result is", weather_result)
+    #weather_result = interpret_weather_score(weather_score)
 
-    return weather_result
+
+    return weather_score
 
 
 # This method categorizes the weather scores - (helper method for calculate_weather_score)
