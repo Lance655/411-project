@@ -15,12 +15,26 @@ def index():
 
 @app.route('/findEvents', methods=["GET", "POST"])
 def find_events():
-    target_date = request.form.get('event-date')
-    city = request.form.get('city')
-    print(city)
-    weather_info = get_weather_for_date("TODO api_key",  city, target_date)
-    weather_score = calculate_weather_score("Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea", city, target_date)
-    return render_template('events.html',weather_score=weather_score)
+    try:
+        # Extract the JSON data from the request
+        data = request.get_json()
+        target_date = data.get('date')
+        city = data.get('city')
+        
+        # Retrieve events using the function from backend.py
+        api_response = get_event(city)
+        if api_response.status_code != 200:
+            # If the API call was unsuccessful, return an error message
+            return jsonify({'error': 'Failed to retrieve events'}), api_response.status_code
+        
+        # Format the events response
+        events_data = format_event_response(api_response.json())
+        
+        # Calculate the weather score using the function from backend.py
+        weather_score = calculate_weather_score(os.getenv("TOMORROWIO_API_KEY"), city, target_date)
+        
+        # Interpret the weather score using the function from backend.py
+        weather_interpretation = interpret_weather_score(weather_score)
 
         # Assign a recommendation level to each event based on the weather score
         for event in events_data:
@@ -53,7 +67,7 @@ def get_weather_categorizes():
 
     weather_score = calculate_weather_score(api_key, city, target_date)
     weather_categorizes = interpret_weather_score(weather_score)
-    return weather_score
+    return jsonify({'weather_categorization': weather_categorizes})
 
 if __name__ == "__main__":
     app.run(port=8080, debug=True)
