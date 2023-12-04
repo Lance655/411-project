@@ -108,8 +108,16 @@
     }
     // Function to initiate OAuth process
     function initiateOAuthLogin() {
-      // replace 'https://your-oauth-provider.com/auth' with the actual url 
-      window.location.href = 'https://your-oauth-provider.com/auth';
+        const clientId = '454906782018-8bvt438shm4f1mvkj1h8ic126pnrhmr9.apps.googleusercontent.com';
+        const redirectUri = encodeURIComponent('http://127.0.0.1:8080/oauth2callback');
+        const responseType = 'code';
+        const scope = encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile');
+        const accessType = 'online';
+        const state = '1234'; // Ideally, this should be a dynamically generated string for each session
+
+        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}&access_type=${accessType}&state=${state}`;
+
+        window.location.href = authUrl;
     }
   </script>
 </body>
