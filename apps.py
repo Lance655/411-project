@@ -76,11 +76,10 @@ def get_weather_categorizes():
 
 
 #MongoDB setup
-#uri = 'mongodb+srv://<user>:<1234>@411project.afvtwb4.mongodb.net/?retryWrites=true&w=majority'
-#client = MongoClient(uri, server_api=ServerApi('1'))
-#db = client.database
-#users_collection = db.users
-
+uri = 'mongodb+srv://user:1234@411project.afvtwb4.mongodb.net/?retryWrites=true&w=majority'
+client = MongoClient(uri, server_api=ServerApi('1'))
+db = client.database
+users_collection = db.users
 
 #for OAUTH
 @app.route('/oauth2callback')
@@ -113,6 +112,8 @@ def oauth2callback():
     user_name = user_info.get('name')
     #print(user_id, user_name)
 
+    insert_result = users_collection.insert_one(user_info)
+
 
     # Redirect to a different page or handle the data as needed
     return redirect('/')
@@ -122,5 +123,3 @@ app.secret_key = '1234'
 
 if __name__ == "__main__":
     app.run(port=8080, debug=True)
-
-
