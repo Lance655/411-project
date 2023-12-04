@@ -1,10 +1,14 @@
-from flask import Flask, render_template, request, jsonify, Response
+from flask import Flask, render_template, request, jsonify, Response, redirect, session
 from flask_cors import CORS
 import requests
 from dotenv import load_dotenv
 import os
 from backend import get_event, format_event_response, get_weather_for_date, calculate_weather_score, interpret_weather_score
 import datetime
+from pymongo import MongoClient
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+
 
 app = Flask(__name__)
 CORS(app)
@@ -70,5 +74,53 @@ def get_weather_categorizes():
     weather_categorizes = interpret_weather_score(weather_score)
     return jsonify({'weather_categorization': weather_categorizes})
 
+
+#MongoDB setup
+#uri = 'mongodb+srv://<user>:<1234>@411project.afvtwb4.mongodb.net/?retryWrites=true&w=majority'
+#client = MongoClient(uri, server_api=ServerApi('1'))
+#db = client.database
+#users_collection = db.users
+
+
+#for OAUTH
+@app.route('/oauth2callback')
+def oauth2callback():
+    # Step 1: Get the authorization code from the callback
+    auth_code = request.args.get('code')
+
+    # Step 2: Exchange the authorization code for an access token
+    token_request_data = {
+        'code': auth_code,
+        'client_id': '454906782018-8bvt438shm4f1mvkj1h8ic126pnrhmr9.apps.googleusercontent.com',
+        'client_secret': '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',
+        'redirect_uri': 'http://127.0.0.1:8080/oauth2callback',
+        'grant_type': 'authorization_code'
+    }
+    token_response = requests.post(
+        'https://oauth2.googleapis.com/token',
+        data=token_request_data
+    )
+    token_response_json = token_response.json()
+    access_token = token_response_json.get('access_token')
+
+    # Step 3: Use the access token to fetch user data from Google's API
+    user_info_response = requests.get(
+        'https://www.googleapis.com/oauth2/v2/userinfo',
+        headers={'Authorization': f'Bearer {access_token}'}
+    )
+    user_info = user_info_response.json()
+    user_id = user_info.get('id')
+    user_name = user_info.get('name')
+    #print(user_id, user_name)
+
+
+    # Redirect to a different page or handle the data as needed
+    return redirect('/')
+
+app.secret_key = '1234'
+
+
 if __name__ == "__main__":
     app.run(port=8080, debug=True)
+
+
