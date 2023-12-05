@@ -13,6 +13,8 @@ from pymongo.server_api import ServerApi
 app = Flask(__name__)
 CORS(app)
 
+TOMORROWIO_API_KEY = os.getenv("Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea")
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -36,7 +38,10 @@ def find_events():
         events_data = format_event_response(api_response.json())
         
         # Calculate the weather score using the function from backend.py
-        weather_score = calculate_weather_score(os.getenv("TOMORROWIO_API_KEY"), city, target_date)
+        print(target_date)
+        print(city)
+        weather_score = calculate_weather_score(TOMORROWIO_API_KEY, city, target_date)
+        print("yogabababa")
         
         # Interpret the weather score using the function from backend.py
         weather_interpretation = interpret_weather_score(weather_score)
@@ -66,7 +71,7 @@ def get_weather_categorizes():
         city = request.args.get('city')
         target_date = request.args.get('date')
 
-    api_key = os.getenv('TOMORROWIO_API_KEY')
+    api_key = TOMORROWIO_API_KEY
     if not api_key:
         return jsonify({'error': 'API key not configured'}), 500
 
