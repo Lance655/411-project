@@ -19,6 +19,11 @@ TOMORROWIO_API_KEY = os.getenv("Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea")
 def index():
     return render_template('index.html')
 
+@app.route('/events')
+def events():
+    return render_template('events.html')
+
+
 
 @app.route('/findEvents', methods=["GET", "POST"])
 def find_events():
@@ -38,17 +43,17 @@ def find_events():
         events_data = format_event_response(api_response.json())
         
         # Calculate the weather score using the function from backend.py
-        print(target_date)
-        print(city)
+    
         weather_score = calculate_weather_score(TOMORROWIO_API_KEY, city, target_date)
-        print("yogabababa")
         
         # Interpret the weather score using the function from backend.py
         weather_interpretation = interpret_weather_score(weather_score)
 
         # Assign a recommendation level to each event based on the weather score
-        for event in events_data:
-            event['recommendationLevel'] = weather_interpretation
+        #print("sup bro")
+        #for event in events_data:
+        #    event['recommendationLevel'] = weather_interpretation
+        #print("elmo")
         
         # Return the data as a JSON response
         return jsonify({
