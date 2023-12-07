@@ -6,7 +6,7 @@ from flask import Flask, jsonify, Response
 from dotenv import load_dotenv
 load_dotenv()
 
-PEXELS_API_KEY = os.environ.get("PEXELS_API_KEY")
+TOMORROWIO_API_KEY = os.environ.get(Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea)
 
 app = Flask(__name__)
 
@@ -30,3 +30,4 @@ def get_image(image):
         
 if __name__ == "__main__":
     app.run(port=8080, debug=True)
+

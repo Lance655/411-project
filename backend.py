@@ -147,26 +147,26 @@ def get_event(location):
 
 #This will return a formatting string listing the events returned by AP
 def format_event_response(api_response):
-  formatted_response = ""
+  # formatted_response = ""
   events = api_response.get('data', [])
-  # formatted_events = []
+  formatted_events = []
 
   for i, event in enumerate(events, start=1):
       name = event.get('name', 'No name provided')
       location = event.get('venue', {}).get('full_address', 'No location provided')
       start_time = event.get('start_time', 'No start time provided')
-      formatted_response += f"Event {i}\nName: {name}\nLocation: {location}\nTime: {start_time}\n\n"
+      # formatted_response += f"Event {i}\nName: {name}\nLocation: {location}\nTime: {start_time}\n\n"
 
-      # formatted_event = {
-      #    'event_number': i,
-      #   'name': name,
-      #      'location': location,
-      #    'start_time': start_time
-      #   }
-      #  formatted_events.append(formatted_event)
+      formatted_event = {
+         'event_number': i,
+         'name': name,
+         'location': location,
+         'start_time': start_time
+      }
+      formatted_events.append(formatted_event)
       
-  # return formatted_events
-  return formatted_response
+  return formatted_events
+  # return formatted_response
 
 #This returns a list of all the Event Names in order
 def get_event_names(api_response):
