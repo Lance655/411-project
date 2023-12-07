@@ -88,15 +88,16 @@
         const city = document.getElementById('city').value;
 
         console.log('Form data:', { eventDate, city });
+        const formattedDate = new Date(eventDate).toISOString();
 
-        localStorage.setItem('eventDate', eventDate);
+        localStorage.setItem('eventDate', formattedDate );
         localStorage.setItem('city', city);
 
         $.ajax({
             url: 'http://localhost:8080/findEvents',
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({ date: eventDate, city: city}),
+            data: JSON.stringify({ date: formattedDate, city: city}),
             success: function(response) {
                 console.log('Success:', response);
                 window.location.href = 'events.html';

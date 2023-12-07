@@ -115,6 +115,7 @@
                 success: function(response) {
                     // Assuming 'response' contains an array under 'events'
                     const events = response.events; // Adjust depending on the actual structure of your response
+                    print("peanut butter")
                     if (events.length > 0) {
                         events.forEach(event => {
                             const eventElement = document.createElement('div');
