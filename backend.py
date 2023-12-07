@@ -135,7 +135,7 @@ weather_vals = {'cloudBaseAvg': 1.25, 'cloudBaseMax': 5.08, 'cloudBaseMin': 0, '
 url = "https://real-time-events-search.p.rapidapi.com/search-events"
 
 headers = {
-	"X-RapidAPI-Key": "6319ba4d96mshf4bc1f385f347ddp133906jsnfea5e88cf1ab",
+	"X-RapidAPI-Key": "55265c0df2msh8d520b45b60abfap14e314jsnffc81b3cee42",
 	"X-RapidAPI-Host": "real-time-events-search.p.rapidapi.com"
 }
 
@@ -149,6 +149,7 @@ def get_event(location):
 def format_event_response(api_response):
   formatted_response = ""
   events = api_response.get('data', [])
+  # formatted_events = []
 
   for i, event in enumerate(events, start=1):
       name = event.get('name', 'No name provided')
@@ -156,6 +157,15 @@ def format_event_response(api_response):
       start_time = event.get('start_time', 'No start time provided')
       formatted_response += f"Event {i}\nName: {name}\nLocation: {location}\nTime: {start_time}\n\n"
 
+      # formatted_event = {
+      #    'event_number': i,
+      #   'name': name,
+      #      'location': location,
+      #    'start_time': start_time
+      #   }
+      #  formatted_events.append(formatted_event)
+      
+  # return formatted_events
   return formatted_response
 
 #This returns a list of all the Event Names in order
