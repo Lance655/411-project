@@ -105,7 +105,7 @@
         function toTitleCase(str) {
             return str.toLowerCase().replace(/\b\w/g, letter => letter.toUpperCase());
         }
-
+        console.log("balony")
         function fetchEventsForDate(cityName, date, dayContainer) {
             $.ajax({
                 url: 'http://localhost:8080/findEvents',
@@ -115,7 +115,12 @@
                 success: function(response) {
                     // Assuming 'response' contains an array under 'events'
                     const events = response.events; // Adjust depending on the actual structure of your response
-                    print("peanut butter")
+                    
+                    // TEST PRINTING:
+                    console.log(events)
+                    console.log(date)
+                    console.log(dayContainer)
+
                     if (events.length > 0) {
                         events.forEach(event => {
                             const eventElement = document.createElement('div');

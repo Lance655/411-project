@@ -49,6 +49,8 @@ def find_events():
         # Interpret the weather score using the function from backend.py
         weather_interpretation = interpret_weather_score(weather_score)
 
+        # COMMENTED THIS SECTION OUT TO SEE IF THIS WAS THE PROBLEM: 
+        
         # Assign a recommendation level to each event based on the weather score
         #print("sup bro")
         #for event in events_data:
