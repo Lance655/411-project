@@ -1,7 +1,7 @@
 import os
 import requests
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, timedelta
 
 load_dotenv()
 
@@ -44,7 +44,7 @@ def get_weather_for_date(api_key, city, target_date):
             date_from_api = datetime.strptime(daily_data.get('time'), "%Y-%m-%dT%H:%M:%SZ").date()
 
             # Parse the target date
-            target_date_parsed = datetime.strptime(target_date, "%Y-%m-%d").date()
+            target_date_parsed = datetime.strptime(target_date.split('T')[0], "%Y-%m-%d").date()
 
             # Compare only the date part
             if date_from_api == target_date_parsed:
@@ -56,7 +56,7 @@ def get_weather_for_date(api_key, city, target_date):
 # This method takes as input the weather_data for a day and calculates the corresponding score
 def calculate_weather_score(api_key, city, target_date):
     weather_data = get_weather_for_date(api_key, city, target_date)
-    print("weather data is", weather_data)
+    #print("weather data is", weather_data)
     # Define weights for each criterion (adjust as needed)
     weights = {
         'temperature_max': -0.5,
@@ -85,7 +85,7 @@ def calculate_weather_score(api_key, city, target_date):
         # Add more terms for other criteria
     )
 
-    print("weather score is ", weather_score)
+    #print("weather score is ", weather_score)
     #weather_result = interpret_weather_score(weather_score)
 
 
@@ -110,14 +110,14 @@ def interpret_weather_score(weather_score):
 
 ## ---- TESTING -----
 
-print(datetime.now().strftime("%Y-%m-%d"))
+#print(datetime.now().strftime("%Y-%m-%d"))
 #result = calculate_weather_score(TOMORROWIO_API_KEY, "new york", datetime.now().strftime("%Y-%m-%d"))
 #print(result)
 #print("hello world")
 
 
 weather_vals = get_weather_for_date(TOMORROWIO_API_KEY, "new york", "2023-12-05")
-print(weather_vals)
+#print(weather_vals)
 
 weather_vals = {'cloudBaseAvg': 1.25, 'cloudBaseMax': 5.08, 'cloudBaseMin': 0, 'cloudCeilingAvg': 2.32, 'cloudCeilingMax': 8.05, 'cloudCeilingMin': 0, 'cloudCoverAvg': 65.12, 'cloudCoverMax': 100, 'cloudCoverMin': 1, 'dewPointAvg': 5.06, 'dewPointMax': 8.86, 'dewPointMin': 2.88, 'evapotranspirationAvg': 0.03, 'evapotranspirationMax': 0.104, 'evapotranspirationMin': 0, 'evapotranspirationSum': 0.689, 'freezingRainIntensityAvg': 0, 'freezingRainIntensityMax': 0, 'freezingRainIntensityMin': 0, 'humidityAvg': 91.71, 'humidityMax': 95, 'humidityMin': 80.29, 'iceAccumulationAvg': 0, 'iceAccumulationLweAvg': 0, 'iceAccumulationLweMax': 0, 'iceAccumulationLweMin': 0, 'iceAccumulationLweSum': 0, 'iceAccumulationMax': 0, 'iceAccumulationMin': 0, 'iceAccumulationSum': 0, 'moonriseTime': '2023-11-17T12:08:14Z', 'moonsetTime': '2023-11-17T19:06:07Z', 'precipitationProbabilityAvg': 16.3, 'precipitationProbabilityMax': 70, 'precipitationProbabilityMin': 0, 'pressureSurfaceLevelAvg': 1018.16, 'pressureSurfaceLevelMax': 1020.04, 'pressureSurfaceLevelMin': 1013.8, 'rainAccumulationAvg': 0.16, 'rainAccumulationLweAvg': 0.16, 'rainAccumulationLweMax': 0.86, 'rainAccumulationLweMin': 0, 'rainAccumulationMax': 0.86, 'rainAccumulationMin': 0, 'rainAccumulationSum': 3.67, 'rainIntensityAvg': 0.14, 'rainIntensityMax': 0.86, 'rainIntensityMin': 0, 'sleetAccumulationAvg': 0, 'sleetAccumulationLweAvg': 0, 'sleetAccumulationLweMax': 0, 'sleetAccumulationLweMin': 0, 'sleetAccumulationLweSum': 0, 'sleetAccumulationMax': 0, 'sleetAccumulationMin': 0, 'sleetIntensityAvg': 0, 'sleetIntensityMax': 0, 'sleetIntensityMin': 0, 'snowAccumulationAvg': 0, 'snowAccumulationLweAvg': 0, 'snowAccumulationLweMax': 0, 'snowAccumulationLweMin': 0, 'snowAccumulationLweSum': 0, 'snowAccumulationMax': 0, 'snowAccumulationMin': 0, 'snowAccumulationSum': 0, 'snowIntensityAvg': 0, 'snowIntensityMax': 0, 'snowIntensityMin': 0, 'sunriseTime': '2023-11-17T07:10:00Z', 'sunsetTime': '2023-11-17T16:20:00Z', 'temperatureApparentAvg': 5.36, 'temperatureApparentMax': 10.34, 'temperatureApparentMin': 0.84, 'temperatureAvg': 6.33, 'temperatureMax': 10.34, 'temperatureMin': 3.63, 'uvHealthConcernAvg': 0, 'uvHealthConcernMax': 0, 'uvHealthConcernMin': 0, 'uvIndexAvg': 0, 'uvIndexMax': 0, 'uvIndexMin': 0, 'visibilityAvg': 12.45, 'visibilityMax': 16, 'visibilityMin': 4.16, 'weatherCodeMax': 1001, 'weatherCodeMin': 1001, 'windDirectionAvg': 212.01, 'windGustAvg': 4.98, 'windGustMax': 10.22, 'windGustMin': 2.79, 'windSpeedAvg': 2.96, 'windSpeedMax': 6.07, 'windSpeedMin': 1.79}
 
@@ -135,15 +135,17 @@ weather_vals = {'cloudBaseAvg': 1.25, 'cloudBaseMax': 5.08, 'cloudBaseMin': 0, '
 url = "https://real-time-events-search.p.rapidapi.com/search-events"
 
 headers = {
-	"X-RapidAPI-Key": "55265c0df2msh8d520b45b60abfap14e314jsnffc81b3cee42",
+	"X-RapidAPI-Key": "72e3362c1amsh7acb340e46f7af7p1d0b27jsn514cddc6eac1",
 	"X-RapidAPI-Host": "real-time-events-search.p.rapidapi.com"
 }
 
 #This method calls the API with given location and returns the response call
-def get_event(location):
-    query = f"Event in {location}"  # Use the location variable to construct the query
+def get_event(location, date):
+    modified_date = date.split('T')[0]
+    query = f"Event in {location}, from {modified_date} to the following 5 days"  # Use the location variable to construct the query
     querystring = {"query": query, "start": "0"}  # Construct the querystring with the dynamic query
     return requests.get(url, headers=headers, params=querystring)
+
 
 #This will return a formatting string listing the events returned by AP
 def format_event_response(api_response):
@@ -189,8 +191,10 @@ def get_event_locations(api_response):
 # Ask user for location
 user_location = input("Enter a location to search for events: ")
 
+date = input("Enter date to search for events: ")
+
 # Call API to get events for the given location
-api_response = get_event(user_location).json()
+api_response = get_event(user_location, date).json()
 
 # Print formatted event details
 print("Formatted Event Details:")
@@ -211,6 +215,4 @@ print(event_dates)
 print("Event Locations:")
 event_locations = get_event_locations(api_response)
 print(event_locations)
-
 """
-
