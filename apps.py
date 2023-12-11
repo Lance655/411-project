@@ -19,9 +19,11 @@ TOMORROWIO_API_KEY = os.getenv("Kf6jEI6LHSzOUU4a7QE6PzrFw6PZy4Ea")
 def index():
     return render_template('index.html')
 
-@app.route('/events')
+@app.route('/events.html')
 def events():
     return render_template('events.html')
+
+
 
 
 
@@ -33,14 +35,25 @@ def find_events():
         target_date = data.get('date')
         city = data.get('city')
         
+
+        #print(f"Extracted data: {data}")
+        #print(f"Target date: {target_date}")
+        #print(f"City: {city}")
+
+
         # Retrieve events using the function from backend.py
-        api_response = get_event(city)
+        api_response = get_event(city,target_date)
+
+        #print(f"API Response: {api_response}")
+        #print(f"API jsonResponse: {api_response.json()}")
+
         if api_response.status_code != 200:
             # If the API call was unsuccessful, return an error message
             return jsonify({'error': 'Failed to retrieve events'}), api_response.status_code
         
         # Format the events response
         events_data = format_event_response(api_response.json())
+        #print("events_data:", events_data)
         
         # Calculate the weather score using the function from backend.py
     
@@ -49,8 +62,6 @@ def find_events():
         # Interpret the weather score using the function from backend.py
         weather_interpretation = interpret_weather_score(weather_score)
 
-        # COMMENTED THIS SECTION OUT TO SEE IF THIS WAS THE PROBLEM: 
-        
         # Assign a recommendation level to each event based on the weather score
         #print("sup bro")
         #for event in events_data:
@@ -58,15 +69,19 @@ def find_events():
         #print("elmo")
         
         # Return the data as a JSON response
-        return jsonify({
+        response = jsonify({
             'events': events_data,
             'weather_score': weather_score,
             'weather_interpretation': weather_interpretation
         })
+        #print("JSON response:", response.data)
+        return response
+    
     except Exception as e:
         # Log the error and return an error message
         print(f"Error occurred: {e}")
         return jsonify({'error': 'An error occurred while processing your request'}), 500
+
 
 @app.route('/get_weather_categorizes', methods=["GET", "POST"])
 def get_weather_categorizes():
