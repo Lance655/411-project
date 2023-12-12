@@ -135,7 +135,7 @@ weather_vals = {'cloudBaseAvg': 1.25, 'cloudBaseMax': 5.08, 'cloudBaseMin': 0, '
 url = "https://real-time-events-search.p.rapidapi.com/search-events"
 
 headers = {
-	"X-RapidAPI-Key": "72e3362c1amsh7acb340e46f7af7p1d0b27jsn514cddc6eac1",
+	"X-RapidAPI-Key": "239532e147msh74e0b1c4c523d82p1e6c48jsn5a430dfdcf51",
 	"X-RapidAPI-Host": "real-time-events-search.p.rapidapi.com"
 }
 
